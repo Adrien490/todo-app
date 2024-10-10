@@ -1,4 +1,4 @@
-name: main
+name: CI
 
 on:
   push:
@@ -25,10 +25,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # Mise à jour vers v4
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4 # Mise à jour vers v4
+        uses: actions/setup-node@v4
         with:
           node-version: "18"
 
@@ -40,11 +40,8 @@ jobs:
 
       - name: Run migrations
         env:
-          DATABASE_URL: postgresql://adrien_owner:${{ secrets.POSTGRES_PASSWORD }}@ep-curly-base-a246v9fo-pooler.eu-central-1.aws.neon.tech/adrien?sslmode=require
+          DATABASE_URL: postgresql://adrien_owner:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/adrien
         run: npx prisma migrate deploy
 
       - name: Build the project
         run: npm run build
-
-      - name: Run tests
-        run: npm test

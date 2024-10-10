@@ -40,7 +40,7 @@ jobs:
 
       - name: Run migrations
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: postgresql://adrien_owner:${{ secrets.POSTGRES_PASSWORD }}@ep-curly-base-a246v9fo-pooler.eu-central-1.aws.neon.tech/adrien?sslmode=require
         run: npx prisma migrate deploy
 
       - name: Build the project

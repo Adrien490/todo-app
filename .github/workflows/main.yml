@@ -50,7 +50,7 @@ jobs:
         if: always()
         uses: hoverkraft-tech/compose-action@v2.0.2
         with:
-          compose-file: "./docker-compose.yaml"
+          compose-file: "./docker-compose.yml"
           services: |
             db
           down-flags: "--volumes --remove-orphans"

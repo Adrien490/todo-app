@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: postgres:13
+        env:
+          POSTGRES_USER: adrien_owner
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: adrien
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Generate Prisma client
+        run: |
+          npx prisma generate
+
+      - name: Run migrations
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          npx prisma migrate deploy
+
+      - name: Build the project
+        run: |
+          npm run build
+
+      - name: Run tests
+        run: |
+          npm test
